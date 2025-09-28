@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= kanun.baslik %> - Kanun Detayı
+    </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #0056b3;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .kanun-detay {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+        }
+
+        canvas {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        footer img {
+            vertical-align: middle;
+            margin-right: 5px;
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="kanun-detay">
+        <h1>
+            <%= kanun.baslik %>
+        </h1>
+        <p><strong>Teklif Sahibi:</strong>
+            <%= kanun.teklif_sahibi %>
+        </p>
+        <p><strong>Durum:</strong>
+            <%= kanun.durum %>
+        </p>
+        <% if (kanun.yururluge_giris_sekli) { %>
+            <p><strong>Yürürlüğe Giriş Şekli:</strong>
+                <%= kanun.yururluge_giris_sekli %>
+            </p>
+            <% } %>
+                <p><strong>Oluşturulma Tarihi:</strong>
+                    <%= new Date(kanun.zaman).toLocaleString() %>
+                </p>
+                <p><strong>İçerik:</strong><br>
+                    <%= kanun.icerik %>
+                </p>
+    </div>
+
+    <h3>📊 Oy Dağılımı (Pasta Grafik)</h3>
+    <canvas id="oyGrafiği" width="300" height="300"></canvas>
+
+    <script>
+        const oylar = <% - JSON.stringify(oylar) %>;
+
+        const evetSayısı = oylar.filter(o => o.oy === 'evet').length;
+        const hayırSayısı = oylar.filter(o => o.oy === 'hayır').length;
+
+        const ctx = document.getElementById('oyGrafiği').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Evet', 'Hayır'],
+                datasets: [{
+                    data: [evetSayısı, hayırSayısı],
+                    backgroundColor: ['#4caf50', '#f44336'],
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+
+    <footer>
+        <% if (thumbnail) { %>
+            <img src="<%= thumbnail %>" alt="Bot Logo">
+            <% } %>
+                <%= footer %>
+    </footer>
+</body>
+
+</html>

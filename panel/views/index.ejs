@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>📜 Cumhuriyet Kanunları</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        footer img {
+            vertical-align: middle;
+            margin-right: 5px;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Thumbnail için stil */
+    </style>
+</head>
+
+<body>
+    <h1>📜 Tüm Kanun Teklifleri</h1>
+    <ul>
+        <% kanunlar.forEach(k=> { %>
+            <li>
+                <strong>
+                    <%= k.baslik %>
+                </strong> | Durum: <%= k.durum %>
+                    <% if (k.yururluge_giris_sekli) { %>
+                        (<%= k.yururluge_giris_sekli %>)
+                            <% } %>
+                                - <a href="/kanun/<%= k.id %>">Detay</a>
+            </li>
+            <% }); %>
+    </ul>
+
+    <footer>
+        <% if (thumbnail) { %>
+            <img src="<%= thumbnail %>" alt="Bot Logo">
+            <% } %>
+                <%= footer %>
+    </footer>
+</body>
+
+</html>

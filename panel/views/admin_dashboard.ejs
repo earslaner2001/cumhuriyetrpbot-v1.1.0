@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Paneli</title>
+</head>
+
+<body>
+    <h1>Admin Paneli - Hoş Geldiniz!</h1>
+    <p>Burada kanunları yönetebilirsiniz.</p>
+    <ul>
+        <% kanunlar.forEach(k=> { %>
+            <li>#<%= k.id %> - <%= k.baslik %> (Durum: <%= k.durum %>)</li>
+            <% }); %>
+    </ul>
+</body>
+
+</html>
