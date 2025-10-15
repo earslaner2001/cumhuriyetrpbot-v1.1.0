@@ -43,7 +43,7 @@ export default {
             const embedMsg = new EmbedBuilder()
                 .setTitle('📜 Kanunlar Listesi')
                 .setColor(config.renkler.bilgi)
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail })
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail })
                 .setTimestamp();
 
             for (const row of rows) {

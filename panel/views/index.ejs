@@ -1,82 +1,560 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 
 <head>
-    <title>📜 Cumhuriyet Kanunları</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 Cumhuriyet RP Bot v1.1.0 - Kanun Takip Sistemi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        h1 {
-            color: #0056b3;
-        }
-
-        ul {
-            list-style-type: none;
+        * {
+            margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        li {
-            background-color: #fff;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        a {
-            color: #007bff;
-            text-decoration: none;
+        /* Arka plan animasyonu */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/><stop offset="100%" style="stop-color:rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(%23a)"><animate attributeName="cx" values="20;80;20" dur="15s" repeatCount="indefinite"/></circle><circle cx="80" cy="80" r="15" fill="url(%23a)"><animate attributeName="cy" values="80;20;80" dur="12s" repeatCount="indefinite"/></circle></svg>') repeat;
+            animation: float 25s ease-in-out infinite;
         }
 
-        a:hover {
-            text-decoration: underline;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
         }
 
-        footer {
-            margin-top: 30px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
             text-align: center;
+            margin-bottom: 3rem;
+            animation: slideInDown 1s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.3);
+            }
+            to {
+                text-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 50px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
             color: #666;
-            font-size: 0.9em;
+            font-weight: 500;
         }
 
-        footer img {
-            vertical-align: middle;
-            margin-right: 5px;
-            width: 24px;
-            height: 24px;
+        .kanun-list {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideInUp 1s ease-out 0.5s both;
         }
 
-        /* Thumbnail için stil */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kanun-list h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .kanun-list h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .kanun-item {
+            background: white;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .kanun-item:nth-child(odd) { animation-delay: 0.1s; }
+        .kanun-item:nth-child(even) { animation-delay: 0.2s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .kanun-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .kanun-item:hover::before {
+            left: 100%;
+        }
+
+        .kanun-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .kanun-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .kanun-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .kanun-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: breathing 3s ease-in-out infinite;
+        }
+
+        @keyframes breathing {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .status-taslak { background: #ffeaa7; color: #2d3436; }
+        .status-oylamada { background: #74b9ff; color: white; }
+        .status-yururlukte { background: #00b894; color: white; }
+        .status-reddedildi { background: #e17055; color: white; }
+
+        .kanun-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 25px rgba(118, 75, 162, 0.6);
+            }
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-text {
+            color: white;
+            font-size: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobil responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .kanun-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Loading animasyonu */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body>
-    <h1>📜 Tüm Kanun Teklifleri</h1>
-    <ul>
-        <% kanunlar.forEach(k=> { %>
-            <li>
-                <strong>
-                    <%= k.baslik %>
-                </strong> | Durum: <%= k.durum %>
-                    <% if (k.yururluge_giris_sekli) { %>
-                        (<%= k.yururluge_giris_sekli %>)
-                            <% } %>
-                                - <a href="/kanun/<%= k.id %>">Detay</a>
-            </li>
-            <% }); %>
-    </ul>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gavel"></i> Cumhuriyet RP Bot</h1>
+            <p class="subtitle">📜 v1.1.0 Kanun Takip ve Yönetim Sistemi</p>
+        </div>
 
-    <footer>
-        <% if (thumbnail) { %>
-            <img src="<%= thumbnail %>" alt="Bot Logo">
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="icon" style="color: #00b894;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="number"><%= kanunlar.filter(k => k.durum === 'Yürürlükte').length %></div>
+                <div class="label">Yürürlükteki Kanunlar</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon" style="color: #74b9ff;">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="number"><%= kanunlar.filter(k => k.durum === 'Oylamada').length %></div>
+                <div class="label">Oylamadaki Kanunlar</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon" style="color: #ffeaa7;">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <div class="number"><%= kanunlar.filter(k => k.durum === 'Taslak').length %></div>
+                <div class="label">Taslak Kanunlar</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon" style="color: #e17055;">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="number"><%= kanunlar.filter(k => k.durum === 'Reddedildi').length %></div>
+                <div class="label">Reddedilen Kanunlar</div>
+            </div>
+        </div>
+
+        <div class="kanun-list">
+            <h2><i class="fas fa-scroll"></i> Tüm Kanun Teklifleri</h2>
+            
+            <% if (kanunlar.length === 0) { %>
+                <div style="text-align: center; padding: 3rem; color: #666;">
+                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Henüz hiç kanun teklifi bulunmuyor.</p>
+                </div>
+            <% } else { %>
+                <% kanunlar.forEach((k, index) => { %>
+                    <div class="kanun-item" data-index="<%= index %>">
+                        <div class="kanun-title">
+                            <i class="fas fa-balance-scale"></i> <%= k.baslik %>
+                        </div>
+                        
+                        <div class="kanun-meta">
+                            <span class="kanun-status status-<%= k.durum.toLowerCase() %>">
+                                <% if (k.durum === 'Taslak') { %>
+                                    <i class="fas fa-edit"></i> Taslak
+                                <% } else if (k.durum === 'Oylamada') { %>
+                                    <i class="fas fa-vote-yea"></i> Oylamada
+                                <% } else if (k.durum === 'Yürürlükte') { %>
+                                    <i class="fas fa-check-circle"></i> Yürürlükte
+                                <% } else if (k.durum === 'Reddedildi') { %>
+                                    <i class="fas fa-times-circle"></i> Reddedildi
+                                <% } %>
+                            </span>
+                            
+                            <% if (k.yururluge_giris_sekli) { %>
+                                <span style="color: #666;">
+                                    <i class="fas fa-newspaper"></i> <%= k.yururluge_giris_sekli %>
+                                </span>
+                            <% } %>
+                            
+                            <span style="color: #999;">
+                                <i class="fas fa-calendar"></i> <%= new Date(k.zaman).toLocaleDateString('tr-TR') %>
+                            </span>
+                        </div>
+                        
+                        <div class="kanun-actions">
+                            <a href="/kanun/<%= k.id %>" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> Detay Görüntüle
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
             <% } %>
-                <%= footer %>
-    </footer>
+        </div>
+
+        <div class="footer">
+            <% if (thumbnail) { %>
+                <img src="<%= thumbnail %>" alt="Bot Logo">
+            <% } %>
+            <div class="footer-text">
+                <i class="fas fa-shield-alt"></i> <%= footer %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation delay'leri ayarla
+        document.querySelectorAll('.kanun-item[data-index]').forEach(item => {
+            const index = parseInt(item.getAttribute('data-index'));
+            item.style.animationDelay = (index * 0.1) + 's';
+        });
+
+        // Sayfa yüklenme animasyonu
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+
+        // Smooth scroll için
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Kanun kartlarına tıklama efekti
+        document.querySelectorAll('.kanun-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!e.target.closest('.btn')) {
+                    const link = this.querySelector('.btn');
+                    if (link) {
+                        window.location.href = link.href;
+                    }
+                }
+            });
+        });
+
+        // Rastgele parçacık efekti
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.7);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                animation: float-particle 6s linear infinite;
+                left: ${Math.random() * 100}vw;
+                top: 100vh;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float-particle {
+                    to {
+                        transform: translateY(-110vh) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+                style.remove();
+            }, 6000);
+        }
+
+        // Her 3 saniyede bir parçacık oluştur
+        setInterval(createParticle, 3000);
+    </script>
 </body>
 
 </html>

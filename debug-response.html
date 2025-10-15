@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cumhuriyet RP Bot v1.1.0 - Admin Girişi</title>
+    <title>Cumhuriyet RP Bot - Admin Girişi</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -266,14 +266,14 @@
         </div>
         
         <h1 class="title">Cumhuriyet RP Bot</h1>
-        <p class="subtitle">v1.1.0 Admin Kontrol Paneli</p>
+        <p class="subtitle">Admin Kontrol Paneli</p>
         
-        <% if (hata) { %>
+        
             <div class="error-message">
                 <i class="fas fa-exclamation-triangle"></i>
-                <%= hata %>
+                Geçersiz kullanıcı adı, şifre veya yetki!
             </div>
-        <% } %>
+        
         
         <form action="/admin/login" method="POST" id="loginForm">
             <div class="form-group">

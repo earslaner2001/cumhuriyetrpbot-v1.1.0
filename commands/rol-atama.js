@@ -66,7 +66,7 @@ export default {
                 .setTitle('✅ Rol Ataması Başarılı!')
                 .setDescription(`**${targetUser.user.tag}** adlı üyeye **${targetRole.name}** rolü başarıyla atandı.`)
                 .setColor(config.renkler.onay) // config objesinden alındı
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                 .setTimestamp();
 
             await interaction.reply({ embeds: [embedMsg] });

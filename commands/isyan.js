@@ -52,7 +52,7 @@ export default {
                     İsyanı başlatan: ${interaction.user.tag}
                 `)
                 .setColor(config.renkler.red) // config objesinden alındı
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                 .setTimestamp();
 
             await interaction.reply({ embeds: [embedMsg] });

@@ -1,130 +1,177 @@
 // commands/baskan-onayla.js
-import pkg from 'discord.js'; // Önceki hatayı çözmek için bu satırı ekledik
-const { SlashCommandBuilder, EmbedBuilder, MessageActionRow, MessageButton, MessageFlags } = pkg; // Ve bu satırı
-
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import dbPromise from '../database/db.js';
+import { isAuthorized } from '../utils/yetkiKontrol.js';
 import config from '../config.js';
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('baskan-onayla')
-        .setDescription('Bir kanun teklifini onaylar ve yürürlüğe sokar.')
+        .setName('baskan-karar')
+        .setDescription('Bir kanun teklifini onaylar/reddeder ve yürürlüğe sokar.')
         .addIntegerOption(option =>
             option.setName('kanun_id')
-                .setDescription('Onaylanacak kanun teklifinin ID’si')
-                .setRequired(true))
+                .setDescription('Onaylanacak kanun teklifinin ID\'si')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('karar')
+                .setDescription('Başkanın kararı')
+                .setRequired(true)
+                .addChoices(
+                    { name: '✅ Onaylıyorum', value: 'onayla' },
+                    { name: '❌ Reddediyorum', value: 'reddet' }
+                )
+        )
         .addStringOption(option =>
             option.setName('gecis_sekli')
-                .setDescription('Kanunun yürürlüğe giriş şekli (örneğin: "Resmi Gazete ile")')
-                .setRequired(true)),
+                .setDescription('Kanunun yürürlüğe giriş şekli (sadece onay için gerekli)')
+                .setRequired(false)
+        ),
 
     async execute(interaction) {
-        console.log(`[BASKAN-ONAYLA] Komut çağrıldı. Kullanıcı: ${interaction.user.tag}, Kanun ID: ${interaction.options.getInteger('kanun_id')}`);
-        // Etkileşimi hemen ertele (Discord'a 3 saniye içinde yanıt verildiğini bildir)
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral }); // Kullanıcıya özel yanıt
-        console.log(`[BASKAN-ONAYLA] DeferReply gönderildi.`);
+        await interaction.deferReply({ ephemeral: true });
+        console.log(`🔍 [BAŞKAN-ONAYLA] Komut başlatıldı - Kullanıcı: ${interaction.user.tag}`);
 
-        const kanunId = interaction.options.getInteger('kanun_id');
-        const gecisSekli = interaction.options.getString('gecis_sekli');
         const db = await dbPromise;
+        const başkanRolüId = config.roller.başkan;
 
-        // Yetki kontrolü (sadece belirli bir rolün bu komutu kullanmasına izin ver)
-        // Lütfen bu kısmı kendi rol ID'nizle güncelleyin.
-        const requiredRoleId = '920832297199087677'; // Buraya yetkili rolünün ID'sini girin
-        if (!interaction.member.roles.cache.has(requiredRoleId)) {
-            console.log(`[BASKAN-ONAYLA] Yetki hatası: ${interaction.user.tag} gerekli role sahip değil.`);
+        // Yetki Kontrolü
+        const yetkili = isAuthorized(interaction.member, başkanRolüId);
+        if (!yetkili) {
+            let displayRolName = başkanRolüId;
+            if (başkanRolüId && interaction.guild) {
+                const role = interaction.guild.roles.cache.get(başkanRolüId);
+                if (role) {
+                    displayRolName = role.name;
+                }
+            }
+            console.log(`❌ [BAŞKAN-ONAYLA] Yetki hatası: ${interaction.user.tag}`);
             return interaction.editReply({
-                content: '❌ Bu komutu kullanmak için gerekli yetkiye sahip değilsiniz.',
-                flags: MessageFlags.Ephemeral
+                content: `⛔ Bu komutu sadece **${displayRolName}** rolüne sahip olanlar kullanabilir.`,
+                ephemeral: true
             });
         }
-        console.log(`[BASKAN-ONAYLA] Yetki kontrolü başarılı.`);
+
+        const kanunId = interaction.options.getInteger('kanun_id');
+        const karar = interaction.options.getString('karar');
+        const gecisSekli = interaction.options.getString('gecis_sekli');
+
+        console.log(`🔍 [BAŞKAN-ONAYLA] Parametreler:`, { kanunId, karar, gecisSekli });
 
         try {
-            console.log(`[BASKAN-ONAYLA] Veritabanından kanun kontrol ediliyor (ID: ${kanunId})...`);
+            // Kanun kontrolü
             const kanun = await db.get(`SELECT * FROM kanunlar WHERE id = ?`, [kanunId]);
-            console.log(`[BASKAN-ONAYLA] Kanun kontrol sonucu:`, kanun);
-
             if (!kanun) {
-                console.log(`[BASKAN-ONAYLA] Kanun bulunamadı: ${kanunId}`);
-                return interaction.editReply({ content: '❌ Belirtilen ID’de bir kanun teklifi bulunamadı.', flags: MessageFlags.Ephemeral });
+                console.log(`❌ [BAŞKAN-ONAYLA] Kanun bulunamadı: ${kanunId}`);
+                return interaction.editReply({
+                    content: '❌ Belirtilen ID\'de bir kanun teklifi bulunamadı.',
+                    ephemeral: true
+                });
             }
 
+            // Kanun durumu kontrolü
             if (kanun.durum !== 'Oylamada') {
-                console.log(`[BASKAN-ONAYLA] Kanun oylamada değil. Mevcut durum: ${kanun.durum}`);
-                return interaction.editReply({ content: `⚠️ Bu kanun teklifi şu anda "Oylamada" durumunda değil. Mevcut durumu: **${kanun.durum}**`, flags: MessageFlags.Ephemeral });
+                console.log(`⚠️ [BAŞKAN-ONAYLA] Kanun oylamada değil: ${kanun.durum}`);
+                return interaction.editReply({
+                    content: `⚠️ Bu kanun şu anda oylamada değil. Mevcut durum: **${kanun.durum}**`,
+                    ephemeral: true
+                });
             }
 
-            // Oyları kontrol et ve geçerliliği belirle
-            console.log(`[BASKAN-ONAYLA] Oylar hesaplanıyor (Kanun ID: ${kanunId})...`);
+            // Onay için geçiş şekli kontrolü
+            if (karar === 'onayla' && !gecisSekli) {
+                return interaction.editReply({
+                    content: '❌ Kanunu onaylarken "gecis_sekli" parametresini belirtmelisiniz.',
+                    ephemeral: true
+                });
+            }
+
+            // Oyları hesapla
             const oylar = await db.all(`SELECT oy FROM oylar WHERE kanun_id = ?`, [kanunId]);
             const evetOylari = oylar.filter(o => o.oy === 'evet').length;
             const hayirOylari = oylar.filter(o => o.oy === 'hayır').length;
             const toplamOy = evetOylari + hayirOylari;
-            console.log(`[BASKAN-ONAYLA] Oylama sonuçları: Evet: ${evetOylari}, Hayır: ${hayirOylari}, Toplam: ${toplamOy}`);
 
+            console.log(`📊 [BAŞKAN-ONAYLA] Oylama sonuçları:`, { evetOylari, hayirOylari, toplamOy });
+
+            let yeniDurum;
             let sonucMesaji;
-            let durumGuncellemesi;
-            let renk = config.renkler.bilgi; // Varsayılan renk
+            let embedRenk;
+            let embedIcon;
 
-            if (toplamOy < 1) { // Eğer hiç oy yoksa
-                sonucMesaji = `⛔ Bu kanun teklifi için henüz yeterli oy kullanılmamış. (Toplam oy: ${toplamOy})`;
-                durumGuncellemesi = kanun.durum; // Durumu değiştirmeden bırak
-                renk = config.renkler.hata;
-            } else if (evetOylari > hayirOylari) {
-                sonucMesaji = `✅ Kanun teklifi yeterli "Evet" oyu alarak kabul edildi ve yürürlüğe girdi!`;
-                durumGuncellemesi = 'Yürürlükte';
-                renk = config.renkler.onay;
+            if (karar === 'onayla') {
+                yeniDurum = 'Yürürlükte';
+                sonucMesaji = '✅ Kanun Başkan tarafından onaylandı ve yürürlüğe girdi!';
+                embedRenk = config.renkler.onay || '#4caf50';
+                embedIcon = '✅';
+                
+                await db.run(
+                    `UPDATE kanunlar SET durum = ?, yururluge_giris_sekli = ? WHERE id = ?`,
+                    [yeniDurum, gecisSekli, kanunId]
+                );
             } else {
-                sonucMesaji = `❌ Kanun teklifi yeterli oyu alamadığı için reddedildi.`;
-                durumGuncellemesi = 'Reddedildi';
-                renk = config.renkler.hata;
+                yeniDurum = 'Reddedildi';
+                sonucMesaji = '❌ Kanun Başkan tarafından reddedildi.';
+                embedRenk = config.renkler.hata || '#f44336';
+                embedIcon = '❌';
+                
+                await db.run(`UPDATE kanunlar SET durum = ? WHERE id = ?`, [yeniDurum, kanunId]);
             }
-            console.log(`[BASKAN-ONAYLA] Kanun sonuç mesajı: ${sonucMesaji}, Durum güncellemesi: ${durumGuncellemesi}`);
 
+            console.log(`✅ [BAŞKAN-ONAYLA] Kanun durumu güncellendi: ${yeniDurum}`);
 
-            // Kanunun durumunu güncelle
-            console.log(`[BASKAN-ONAYLA] Kanun durumu güncelleniyor...`);
-            await db.run(
-                `UPDATE kanunlar SET durum = ?, yururluge_giris_sekli = ? WHERE id = ?`,
-                [durumGuncellemesi, (durumGuncellemesi === 'Yürürlükte' ? gecisSekli : null), kanunId]
-            );
-            console.log(`[BASKAN-ONAYLA] Kanun durumu güncellendi.`);
+            // Oylama yüzdelerini hesapla
+            const evetYuzde = toplamOy > 0 ? ((evetOylari / toplamOy) * 100).toFixed(1) : 0;
+            const hayirYuzde = toplamOy > 0 ? ((hayirOylari / toplamOy) * 100).toFixed(1) : 0;
 
-
+            // Embed oluştur
             const embed = new EmbedBuilder()
-                .setTitle(`Kanun Onaylama Sonucu: #${kanunId}`)
-                .setDescription(`
-                    **Başlık:** ${kanun.baslik}
-                    **Teklif Sahibi:** ${kanun.teklif_sahibi}
-                    **Oylama Sonuçları:**
-                    - Evet: ${evetOylari}
-                    - Hayır: ${hayirOylari}
-                    **Sonuç:** ${sonucMesaji}
-                    ${durumGuncellemesi === 'Yürürlükte' ? `**Yürürlüğe Giriş Şekli:** ${gecisSekli}` : ''}
-                `)
-                .setColor(renk)
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail })
+                .setTitle(`${embedIcon} Başkan Kararı - Kanun #${kanunId}`)
+                .setDescription(`**${kanun.baslik}**`)
+                .addFields(
+                    {
+                        name: '📋 Kanun Bilgileri',
+                        value: `**Teklif Sahibi:** ${kanun.teklif_sahibi}\n**Açıklama:** ${kanun.aciklama || 'Belirtilmemiş'}`,
+                        inline: false
+                    },
+                    {
+                        name: '🗳️ Oylama Sonuçları',
+                        value: `**Evet:** ${evetOylari} (%${evetYuzde})\n**Hayır:** ${hayirOylari} (%${hayirYuzde})\n**Toplam:** ${toplamOy} oy`,
+                        inline: true
+                    },
+                    {
+                        name: '⚖️ Başkan Kararı',
+                        value: sonucMesaji,
+                        inline: true
+                    }
+                )
+                .setColor(embedRenk)
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail })
                 .setTimestamp();
 
-            console.log(`[BASKAN-ONAYLA] Embed oluşturuldu. Yanıt gönderiliyor...`);
-            await interaction.editReply({ embeds: [embed] });
-            console.log(`[BASKAN-ONAYLA] Yanıt başarıyla gönderildi.`);
-
-        } catch (error) {
-            console.error('❌ [BASKAN-ONAYLA] Komut çalıştırılırken bir hata oluştu:', error);
-            // Eğer deferReply gönderilmişse editReply kullan, yoksa reply kullan
-            if (interaction.deferred || interaction.replied) {
-                await interaction.editReply({
-                    content: '❌ Komut yürütülürken bir hata meydana geldi. Lütfen logları kontrol edin.',
-                    flags: MessageFlags.Ephemeral
-                }).catch(err => console.error("❌ [BASKAN-ONAYLA] Hata yanıtı gönderilirken de hata oluştu:", err));
-            } else {
-                await interaction.reply({
-                    content: '❌ Komut yürütülürken beklenmedik bir hata meydana geldi.',
-                    flags: MessageFlags.Ephemeral
-                }).catch(err => console.error("❌ [BASKAN-ONAYLA] Hata yanıtı gönderilirken de hata oluştu:", err));
+            // Yürürlük bilgisi ekleme
+            if (karar === 'onayla' && gecisSekli) {
+                embed.addFields({
+                    name: '📜 Yürürlük Bilgisi',
+                    value: `**Geçiş Şekli:** ${gecisSekli}`,
+                    inline: false
+                });
             }
+
+            // Sonucu gönder
+            await interaction.editReply({ 
+                embeds: [embed], 
+                ephemeral: false 
+            });
+
+            console.log(`✅ [BAŞKAN-ONAYLA] Başarıyla tamamlandı - Kanun #${kanunId} ${yeniDurum}`);
+
+        } catch (err) {
+            console.error('❌ [BAŞKAN-ONAYLA] Hata oluştu:', err);
+            await interaction.editReply({
+                content: '❌ Komut işlenirken bir hata oluştu. Lütfen logları kontrol edin.',
+                ephemeral: true
+            });
         }
-    }
+    },
 };

@@ -1,18 +1,770 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 
 <head>
-    <title>Admin Paneli</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Admin Paneli - Cumhuriyet RP Bot v1.1.0</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Arka plan animasyonu */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(155, 89, 182, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 70%, rgba(46, 204, 113, 0.1) 0%, transparent 50%);
+            animation: pulse-bg 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%, 100% { 
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideInDown 1s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+            animation: glow-admin 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-admin {
+            from {
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(231, 76, 60, 0.3);
+            }
+            to {
+                text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7), 0 0 60px rgba(231, 76, 60, 0.7);
+            }
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: breathing 3s ease-in-out infinite;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        @keyframes breathing {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 10px 25px rgba(231, 76, 60, 0.6);
+            }
+        }
+
+        @keyframes breathe-red {
+            0%, 100% { 
+                box-shadow: 0 8px 32px rgba(231, 76, 60, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 12px 40px rgba(231, 76, 60, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+        .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .dashboard-card:hover::before {
+            left: 100%;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+            animation: pulse-icon 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-icon {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #34495e;
+            animation: number-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes number-glow {
+            0%, 100% { color: #34495e; }
+            50% { color: #3498db; }
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .kanun-list {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kanun-list h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .kanun-list h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 2px;
+        }
+
+        .kanun-item {
+            background: white;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .kanun-item:nth-child(odd) { 
+            animation-delay: 0.1s; 
+            border-left-color: #e74c3c;
+        }
+        .kanun-item:nth-child(even) { 
+            animation-delay: 0.2s; 
+            border-left-color: #27ae60;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .kanun-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .kanun-item:hover::before {
+            left: 100%;
+        }
+
+        .kanun-item:hover {
+            transform: translateY(-5px) translateX(10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .kanun-id {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .kanun-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .kanun-status {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: status-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .status-taslak { background: #f39c12; color: white; }
+        .status-oylamada { background: #3498db; color: white; }
+        .status-yururlukte { background: #27ae60; color: white; }
+        .status-reddedildi { background: #e74c3c; color: white; }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            animation: btn-shimmer 4s ease-in-out infinite;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            animation: btn-shimmer 4s ease-in-out infinite 2s;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #27ae60, #219a52);
+            color: white;
+            animation: btn-shimmer 4s ease-in-out infinite 1s;
+        }
+
+        @keyframes btn-shimmer {
+            0%, 100% {
+                box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 25px rgba(52, 152, 219, 0.6);
+            }
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer-text {
+            color: white;
+            font-size: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mobil responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Özel parçacık efekti */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particle 8s linear infinite;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Admin Paneli - Hoş Geldiniz!</h1>
-    <p>Burada kanunları yönetebilirsiniz.</p>
-    <ul>
-        <% kanunlar.forEach(k=> { %>
-            <li>#<%= k.id %> - <%= k.baslik %> (Durum: <%= k.durum %>)</li>
-            <% }); %>
-    </ul>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <h1><i class="fas fa-shield-alt"></i> Admin Paneli</h1>
+                    <p class="subtitle">Cumhuriyet RP Bot v1.1.0 Yönetim Merkezi</p>
+                </div>
+                <form action="/admin/logout" method="POST" style="margin: 0;">
+                    <button type="submit" style="
+                        background: rgba(231, 76, 60, 0.8);
+                        border: none;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: 600;
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 8px 32px rgba(231, 76, 60, 0.3);
+                        transition: all 0.3s ease;
+                        animation: breathe-red 3s ease-in-out infinite;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                    </button>
+                </form>
+            </div>
+            <div class="admin-badge">
+                <i class="fas fa-crown"></i> Yönetici Erişimi
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #27ae60;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="card-title">Aktif Kanunlar</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Yürürlükte').length %></div>
+                        <div class="stat-label">Yürürlükte</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #3498db;">
+                        <i class="fas fa-vote-yea"></i>
+                    </div>
+                    <div class="card-title">Oylama Süreci</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Oylamada').length %></div>
+                        <div class="stat-label">Oylamada</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #f39c12;">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="card-title">Hazırlık Aşaması</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Taslak').length %></div>
+                        <div class="stat-label">Taslak</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #e74c3c;">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="card-title">Reddedilen</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Reddedildi').length %></div>
+                        <div class="stat-label">Ret</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #9b59b6;">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="card-title">Oyun Durumu</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: <%= oyunDurumu.memnuniyet_seviyesi >= 75 ? '#27ae60' : oyunDurumu.memnuniyet_seviyesi >= 50 ? '#f39c12' : '#e74c3c' %>;">
+                            <%= oyunDurumu.memnuniyet_seviyesi %>%
+                        </div>
+                        <div class="stat-label">Memnuniyet</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <% if (oyunDurumu.isyan_aktif) { %>
+                        <span style="color: #e74c3c; font-weight: bold;">
+                            <i class="fas fa-exclamation-triangle"></i> İsyan Aktif!
+                        </span>
+                    <% } else { %>
+                        <span style="color: #27ae60;">
+                            <i class="fas fa-peace"></i> Barış
+                        </span>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon" style="color: #3498db;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-title">Toplam İstatistik</div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number"><%= kanunlar.length %></div>
+                        <div class="stat-label">Toplam Kanun</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kanun-list">
+            <h2><i class="fas fa-gavel"></i> Kanun Yönetimi</h2>
+            
+            <% if (kanunlar.length === 0) { %>
+                <div style="text-align: center; padding: 3rem; color: #7f8c8d;">
+                    <i class="fas fa-inbox" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                    <p style="font-size: 1.2rem;">Henüz hiç kanun teklifi bulunmuyor.</p>
+                    <p style="margin-top: 0.5rem;">Discord botunu kullanarak yeni kanun teklifleri oluşturabilirsiniz.</p>
+                </div>
+            <% } else { %>
+                <% kanunlar.forEach((k, index) => { %>
+                    <div class="kanun-item" data-index="<%= index %>">
+                        <div class="kanun-id">
+                            <i class="fas fa-hashtag"></i> <%= k.id %>
+                        </div>
+                        
+                        <div class="kanun-title">
+                            <i class="fas fa-balance-scale"></i> <%= k.baslik %>
+                        </div>
+                        
+                        <div style="margin-top: 1rem;">
+                            <span class="kanun-status status-<%= k.durum.toLowerCase() %>">
+                                <% if (k.durum === 'Taslak') { %>
+                                    <i class="fas fa-edit"></i> Taslak
+                                <% } else if (k.durum === 'Oylamada') { %>
+                                    <i class="fas fa-vote-yea"></i> Oylamada
+                                <% } else if (k.durum === 'Yürürlükte') { %>
+                                    <i class="fas fa-check-circle"></i> Yürürlükte
+                                <% } else if (k.durum === 'Reddedildi') { %>
+                                    <i class="fas fa-times-circle"></i> Reddedildi
+                                <% } %>
+                            </span>
+                            
+                            <% if (k.zaman) { %>
+                                <span style="margin-left: 1rem; color: #95a5a6; font-size: 0.9rem;">
+                                    <i class="fas fa-calendar"></i> <%= new Date(k.zaman).toLocaleDateString('tr-TR') %>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+            
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+                <a href="/admin/logout" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
+                <a href="/admin/settings" class="btn btn-success">
+                    <i class="fas fa-cog"></i> Ayarlar
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">
+                <i class="fas fa-shield-alt"></i> Admin Panel - Cumhuriyet RP Bot v1.1.0 Yönetim Sistemi
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation delay'leri ayarla
+        document.querySelectorAll('.kanun-item[data-index]').forEach(item => {
+            const index = parseInt(item.getAttribute('data-index'));
+            item.style.animationDelay = (index * 0.1) + 's';
+        });
+
+        // Sayfa yüklenme animasyonu
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+
+        // Admin özel parçacık efekti
+        function createAdminParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+
+        // Her 2 saniyede bir parçacık oluştur
+        setInterval(createAdminParticle, 2000);
+
+        // Sayfa tıklama efekti
+        document.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+                left: ${e.clientX - 50}px;
+                top: ${e.clientY - 50}px;
+                width: 100px;
+                height: 100px;
+                z-index: 9999;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+                style.remove();
+            }, 600);
+        });
+
+        // Hover efektleri için ses benzetimi (görsel geri bildirim)
+        document.querySelectorAll('.btn, .dashboard-card, .kanun-item').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.filter = 'brightness(1.1)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.filter = 'brightness(1)';
+            });
+        });
+    </script>
 </body>
 
 </html>

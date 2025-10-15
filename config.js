@@ -3,6 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
+    // Bot bilgileri
+    version: '1.1.0',
+    name: 'Cumhuriyet RP Bot',
+    description: 'Discord tabanlı devlet simülasyonu botu',
+    
     token: process.env.TOKEN || 'YOUR_BOT_TOKEN_HERE', // .env dosyasından okunacak
     clientId: process.env.CLIENT_ID || 'YOUR_CLIENT_ID_HERE', // .env dosyasından okunacak
     guildId: process.env.GUILD_ID || 'YOUR_GUILD_ID_HERE', // Botun çalışacağı sunucunun ID'si (genellikle .env'den alınır)
@@ -29,7 +34,9 @@ export default {
         hata: '#f44336', // BURAYI EKLENDİM: Hata mesajları için kırmızı renk
         bilgi: '#2196f3',
         nötr: '#ffc107',
-        uyari: '#FFC107' // Uyarı rengi
+        uyari: '#FFC107', // Uyarı rengi
+        evet: '#4caf50', // Evet oyları için yeşil renk
+        hayir: '#f44336' // Hayır oyları için kırmızı renk
     },
     embed: {
         footer: 'CumhuriyetBot v1.0 • © 2025',

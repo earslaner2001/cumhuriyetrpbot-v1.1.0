@@ -61,7 +61,7 @@ export default {
                     { name: 'Oluşturulma Zamanı', value: `<t:${Math.floor(new Date(kanun.zaman).getTime() / 1000)}:f>`, inline: false }
                 )
                 .setColor(config.renkler.bilgi)
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail })
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail })
                 .setTimestamp();
 
             console.log(`[KANUN-DURUMU] Embed oluşturuldu. Yanıt gönderiliyor...`);

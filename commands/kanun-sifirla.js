@@ -63,7 +63,7 @@ export default {
                     Bu kanun teklifi başarıyla **Taslak** durumuna geri döndürüldü ve tüm oyları sıfırlandı.
                 `)
                 .setColor(config.renkler.bilgi) // Bilgi için mavi renk
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail })
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail })
                 .setTimestamp();
 
             console.log(`[KANUN-SIFIRLA] Embed oluşturuldu. Yanıt gönderiliyor...`);

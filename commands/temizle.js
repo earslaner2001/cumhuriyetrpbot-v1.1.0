@@ -58,7 +58,7 @@ export default {
                 .setTitle('🧹 Kanal Temizlendi!')
                 .setDescription(`✅ Son 14 gün içinde silinebilecek toplam **${deletedMessages}** mesaj temizlendi.`)
                 .setColor(config.renkler.onay) // config objesinden alındı
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                 .setTimestamp();
 
             return interaction.editReply({ embeds: [embedMsg] });
@@ -92,7 +92,7 @@ export default {
                     .setTitle('🧹 Kanal Temizlendi!')
                     .setDescription(`✅ Başarıyla **${deletedSize}** mesaj silindi.`)
                     .setColor(config.renkler.onay) // config objesinden alındı
-                    .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                    .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                     .setTimestamp();
 
                 await interaction.reply({ embeds: [embedMsg] });

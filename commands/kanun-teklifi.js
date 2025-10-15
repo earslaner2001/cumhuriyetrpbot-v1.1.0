@@ -43,7 +43,7 @@ export default {
                     **Kanun ID:** #${kanunId}
                 `)
                 .setColor(config.renkler.onay)
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail })
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail })
                 .setTimestamp();
 
             // deferReply yapıldığı için artık editReply kullanıyoruz

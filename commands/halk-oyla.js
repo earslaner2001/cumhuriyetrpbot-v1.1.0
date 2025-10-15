@@ -50,6 +50,17 @@ export default {
         const oy = interaction.options.getString('oy');
         const voterId = interaction.user.id;
 
+        console.log('🔍 [HALK-OYLA] Komut parametreleri:', { kanunId, oy, voterId });
+
+        // Oy değerinin geçerli olup olmadığını kontrol et
+        if (!oy || (oy !== 'evet' && oy !== 'hayır')) {
+            console.log('❌ [HALK-OYLA] Geçersiz oy değeri:', oy);
+            return interaction.editReply({ 
+                content: '❌ Geçersiz oy seçimi. Lütfen "evet" veya "hayır" seçin.', 
+                ephemeral: true 
+            });
+        }
+
         try {
             // Kanun durumunu kontrol et
             const kanun = await db.get(`SELECT durum, baslik FROM kanunlar WHERE id = ?`, [kanunId]);
@@ -63,18 +74,33 @@ export default {
             // Kullanıcının daha önce oy kullanıp kullanmadığını kontrol et
             const existingVote = await db.get(`SELECT * FROM oylar WHERE kanun_id = ? AND kullanici_id = ?`, [kanunId, voterId]);
             if (existingVote) {
-                return interaction.editReply({ content: `⚠️ Zaten bu kanun için oy kullandınız (**${existingVote.oy}**). Oyuncular sadece bir kere oy kullanabilir.`, ephemeral: true }); // !!! editReply !!!
+                const oyDurumu = existingVote.oy || 'belirsiz';
+                return interaction.editReply({ 
+                    content: `⚠️ Zaten bu kanun için oy kullandınız (**${oyDurumu}**). Oyuncular sadece bir kere oy kullanabilir.`, 
+                    ephemeral: true 
+                });
             }
 
             // Oy kaydını veritabanına ekle
             await db.run(`INSERT INTO oylar (kanun_id, kullanici_id, oy, tarih) VALUES (?, ?, ?, ?)`,
                 [kanunId, voterId, oy, new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })]);
 
+            // Renk seçimi - güvenli bir şekilde
+            console.log('🔍 Debug - oy:', oy);
+            console.log('🔍 Debug - config.renkler:', config.renkler);
+            let embedRenk = '#2196f3'; // Varsayılan mavi
+            if (oy === 'evet' && config.renkler && config.renkler.evet) {
+                embedRenk = config.renkler.evet;
+            } else if (oy === 'hayir' && config.renkler && config.renkler.hayir) {
+                embedRenk = config.renkler.hayir;
+            }
+            console.log('🔍 Debug - embedRenk:', embedRenk);
+
             const embedMsg = new EmbedBuilder()
                 .setTitle('✅ Oy Kullanıldı!')
-                .setDescription(`**${kanun.baslik}** başlıklı kanun için **${oy.toUpperCase()}** oyu kullandınız. Teşekkür ederiz!`)
-                .setColor(oy === 'evet' ? config.renkler.evet : config.renkler.hayir) // config objesinden alındı
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                .setDescription(`**${kanun.baslik}** başlıklı kanun için **${oy ? oy.toUpperCase() : 'BELİRSİZ'}** oyu kullandınız. Teşekkür ederiz!`)
+                .setColor(embedRenk)
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                 .setTimestamp();
 
             await interaction.editReply({ embeds: [embedMsg], ephemeral: false }); // !!! editReply ve ephemeral ayarı !!!

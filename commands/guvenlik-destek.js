@@ -62,7 +62,7 @@ export default {
                 .setTitle('🛡️ Güvenlik Desteği Sağlandı!')
                 .setDescription(responseContent)
                 .setColor(responseColor)
-                .setFooter({ text: config.embed.footer, iconURL: config.embed.thumbnail }) // config objesinden alındı
+                .setFooter({ text: `${config.embed.footer} • v${config.version}`, iconURL: config.embed.thumbnail }) // config objesinden alındı
                 .setTimestamp();
 
             await interaction.reply({ embeds: [embedMsg] });
