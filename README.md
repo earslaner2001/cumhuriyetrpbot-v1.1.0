@@ -191,6 +191,6 @@ Bu proje **kişisel ve eğitim amaçlı kullanım** içindir.
 **🏛️ CumhuriyetRPBot v1.1.1**  
 *Modern Discord devlet simülasyonu deneyimi*
 
-Made with ❤️ by Forbir's Developers
+Made with by Forbir's Developers
 
 </div>
