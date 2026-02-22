@@ -5,6 +5,27 @@ Bu proje [SemVer](https://semver.org/lang/tr/) sürümleme sistemini takip etmek
 
 ---
 
+## [1.1.1] - 2026-02-22
+### Eklendi
+- Web panelinde Discord markdown formatlama desteği
+  - **Bold** (`**kalın**`) formatı
+  - __Underline__ (`__altı çizili__`) formatı
+  - *Italic* (`*italik*`) formatı
+  - ~~Strikethrough~~ (`~~üzeri çizili~~`) formatı
+  - `Inline code` formatı
+  - ```Code blocks``` formatı
+  - Blockquote (`> alıntı`) formatı
+  - Link formatı (`[text](url)`)
+- Kanun içeriklerinde paragraf desteği
+- String literal `\n` karakterlerinin gerçek satır sonlarına dönüştürülmesi
+
+### İyileştirmeler
+- Kanun açıklamalarının daha okunabilir görüntülenmesi
+- Paragraf etiketleri için özel CSS stilleri
+- Satır sonları ve paragraf ayrımları Discord'daki gibi çalışıyor
+
+---
+
 ## [1.1.0] - 2025-01-19
 ### Eklendi
 - `/kanun-listele` komutu ile yürürlükteki ve bekleyen kanunların embed formatında listelenmesi.

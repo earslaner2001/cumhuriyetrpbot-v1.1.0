@@ -1,0 +1,9 @@
+{
+  "css.validate": true,
+  "files.associations": {
+    "*.ejs": "ejs"
+  },
+  "[ejs]": {
+    "css.validate": false
+  }
+}

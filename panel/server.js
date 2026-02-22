@@ -72,6 +72,12 @@ app.get('/kanun/:id', async (req, res) => {
         }
         // Kanuna ait oyları da çek
         const oylar = await db.all('SELECT oy FROM oylar WHERE kanun_id = ?', id);
+        
+        // Oyları say (küçük harfle kontrol et)
+        kanun.oylar_evet = oylar.filter(o => o.oy.toLowerCase() === 'evet').length;
+        kanun.oylar_hayir = oylar.filter(o => o.oy.toLowerCase() === 'hayır' || o.oy.toLowerCase() === 'hayir').length;
+        kanun.oylar_cekinser = oylar.filter(o => o.oy.toLowerCase() === 'çekimser' || o.oy.toLowerCase() === 'cekinser').length;
+        
         res.render('detay', { kanun, oylar, footer: config.embed.footer, thumbnail: config.embed.thumbnail }); // config objesinden erişildi
     } catch (err) {
         console.error("Panelde kanun detayı yüklenirken hata:", err);

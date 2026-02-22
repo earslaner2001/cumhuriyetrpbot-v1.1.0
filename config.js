@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
     // Bot bilgileri
-    version: '1.1.0',
+    version: '1.1.1',
     name: 'Cumhuriyet RP Bot',
     description: 'Discord tabanlı devlet simülasyonu botu',
     
@@ -28,6 +28,9 @@ export default {
     // Bu rol ID'sini de kendi sunucunuzdan alın.
     adminRoleId: '920832297199087677', // Örneğin: '123456789012345670'
 
+    // Vatandaşlık sistemi için kanal ID'si
+    vatandaslikKanali: '1471537745062264952', // Vatandaşlık alım kanalı
+
     renkler: {
         onay: '#4caf50',
         red: '#f44336',
@@ -39,7 +42,7 @@ export default {
         hayir: '#f44336' // Hayır oyları için kırmızı renk
     },
     embed: {
-        footer: 'CumhuriyetBot v1.0 • © 2025',
+        footer: 'CumhuriyetBot v1.1.1 • © 2025',
         thumbnail: 'https://i.imgur.com/BuRxA3L.png'
     },
     panel: {

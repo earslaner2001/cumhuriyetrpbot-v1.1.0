@@ -1,10 +1,14 @@
 {
   "name": "cumhuriyetrpbot",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Discord tabanlı Cumhuriyet RP Bot - Modern Admin Panel ile",
   "type": "module",
   "scripts": {
     "start": "concurrently \"node index.js\" \"node panel/server.js\"",
+    "shard": "concurrently \"node shard.js\" \"node panel/server.js\"",
+    "shard:auto": "concurrently \"node shard.js auto\" \"node panel/server.js\"",
+    "shard:2": "concurrently \"node shard.js 2\" \"node panel/server.js\"",
+    "shard:5": "concurrently \"node shard.js 5\" \"node panel/server.js\"",
     "deploy-commands": "node deploy-commands.js",
     "init-db": "node main.js"
   },

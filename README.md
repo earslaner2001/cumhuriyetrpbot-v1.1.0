@@ -1,4 +1,4 @@
-# 🏛️ CumhuriyetRPBot v1.1.0
+# 🏛️ CumhuriyetRPBot v1.1.1
 
 Modern Discord bot'u ile **devlet simülasyonu** deneyimi yaşayın!  
 CumhuriyetRPBot, Discord sunucunuzda gerçekçi bir **demokratik sistem** kurmanızı sağlar.  
@@ -9,7 +9,7 @@ Oyunculara **başkan, bakan, asker, milletvekili ve halk** rolleri verilir;
 ## 🚀 Sürüm Geçmişi
 * **1.0.0** → İlk yayınlanan temel sürüm
 * **1.1.0** → Modern web paneli, glassmorphism UI, responsive tasarım, Chart.js entegrasyonu
-* **1.1.1** → Gelecek patch sürümü (planlanan)
+* **1.1.1** → Discord markdown desteği (bold, italic, code, links vb.), paragraf formatlama
 
 ## ✨ Özellikler
 
@@ -24,6 +24,7 @@ Oyunculara **başkan, bakan, asker, milletvekili ve halk** rolleri verilir;
 
 ### 🌐 **Modern Web Paneli**
 - **Glassmorphism tasarım** → Cam efektli modern arayüz
+- **Discord markdown desteği** → Bold, italic, code, strikethrough, blockquote, links
 - **Breathing animasyonlar** → Soluk alan buton efektleri
 - **Responsive tasarım** → Mobil ve desktop uyumlu
 - **Chart.js entegrasyonu** → Görsel istatistik grafikleri
@@ -57,13 +58,40 @@ npm install
 cp .env.example .env
 # TOKEN ve diğer bilgileri düzenleyin
 
-# 🚀 Botu başlatın
+# 🚀 Botu başlatın (Normal Mod)
 npm run start
 
-# 🌐 Web paneli için (opsiyonel)
-node panel/server.js
+# 🔥 Botu shard sistemi ile başlatın (Büyük sunucular için)
+npm run shard              # Varsayılan 3 shard
+npm run shard:auto         # Discord otomatik belirler
+npm run shard:2            # 2 shard
+npm run shard:5            # 5 shard
+
+# Windows için .bat dosyaları
+start-normal.bat           # Normal mod
+start-shard.bat            # 3 shard (varsayılan)
+start-shard.bat 5          # 5 shard
+start-shard.bat auto       # Otomatik
+
+# 🌐 Web paneli
 # Panel: http://localhost:3000
 # Admin: admin / 123456
+```
+
+### 🌟 Sharding Nedir?
+**Sharding**, botunuzu birden fazla parçaya bölerek **büyük sunucularda performans artışı** sağlar:
+
+- 🔹 **0-2499 sunucu**: Normal mod yeterli
+- 🔹 **2500+ sunucu**: Sharding zorunlu (Discord kuralı)
+- 🔹 **Avantajları**: Daha hızlı yanıt, daha az RAM, daha stabil bot
+
+**Örnek Kullanım:**
+```bash
+# 3 shard ile başlat (her shard 833 sunucu yönetir)
+npm run shard
+
+# Manuel shard sayısı belirle
+node shard.js 5
 ```
 
 ### 🔧 Yapılandırma
@@ -71,15 +99,20 @@ node panel/server.js
 2. **database/init.sql** ile veritabanı tablolarını oluşturun
 3. Discord sunucunuzda bot'a gerekli yetkiler verin
 
-## 🎯 Sürüm Notları (v1.1.0)
+## 🎯 Sürüm Notları (v1.1.1)
 
 ### 🆕 **Yeni Özellikler**
+- ✅ **Discord Markdown Desteği** → Web panelinde Discord markdown formatlama
+- ✅ **Paragraf Formatlama** → Çift satır sonları ile paragraf ayrımı
+- ✅ **Gelişmiş Metin Görüntüleme** → Kalın, italik, kod, bağlantı desteği
+
+### 🔉 **Güncellenen Özellikler (v1.1.0)**
 - ✅ **Modern Web Paneli** → Glassmorphism tasarımlı admin arayüzü
 - ✅ **Breathing Animasyonlar** → Soluk alan buton efektleri
 - ✅ **Chart.js Entegrasyonu** → Görsel istatistik grafikleri
 - ✅ **Responsive Design** → Mobil ve tablet uyumluluğu
 - ✅ **Session Authentication** → Güvenli admin giriş sistemi
-- ✅ **Professional Branding** → Tüm arayüzlerde v1.1.0 görünümü
+- ✅ **Professional Branding** → Tüm arayüzlerde tutarlı görünüm
 
 ### 🔄 **Güncellemeler**
 - 🔧 Kanun onay mekanizması %50+ oy şartına bağlandı
@@ -94,11 +127,13 @@ node panel/server.js
 
 ## 🗺️ Yol Haritası
 
-### ✅ **Tamamlanan (v1.1.0)**
+### ✅ **Tamamlanan (v1.1.1)**
+- ✅ **Discord markdown parser** → Web panelinde metin formatlama
+- ✅ **Paragraf desteği** → Düzgün satır sonları ve paragraflar
 - ✅ **Modern web paneli** → Glassmorphism UI tamamlandı
 - ✅ **Database entegrasyonu** → SQLite tam entegre edildi
 - ✅ **Responsive tasarım** → Mobil uyumluluk sağlandı
-- ✅ **Professional branding** → Tutarlı v1.1.0 görünümü
+- ✅ **Professional branding** → Tutarlı v1.1.1 görünümü
 
 ### 🔄 **Geliştiriliyor (v1.2.0)**
 - 🔨 **Ekonomi sistemi** → Sanal para ve vergi sistemi
@@ -120,7 +155,7 @@ node panel/server.js
 - **Kanun yönetimi** → Detaylı kanun takip sistemi
 
 ### 🤖 Discord Embeds
-- **Professional footer** → Tüm komutlarda v1.1.0 branding
+- **Professional footer** → Tüm komutlarda v1.1.1 branding
 - **Renkli embed'ler** → Görsel kategori sistemi
 - **Interactive buttons** → Kolay kullanım arayüzü
 
@@ -153,7 +188,7 @@ Bu proje **kişisel ve eğitim amaçlı kullanım** içindir.
 
 <div align="center">
 
-**🏛️ CumhuriyetRPBot v1.1.0**  
+**🏛️ CumhuriyetRPBot v1.1.1**  
 *Modern Discord devlet simülasyonu deneyimi*
 
 Made with ❤️ by Forbir's Developers

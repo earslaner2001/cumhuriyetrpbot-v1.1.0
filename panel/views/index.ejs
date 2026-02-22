@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📜 Cumhuriyet RP Bot v1.1.0 - Kanun Takip Sistemi</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Kanun Takip Sistemi - Cumhuriyet RP Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-red: #C41E3A;
+            --dark-red: #8B1429;
+            --text-dark: #2C2C2C;
+            --text-muted: #7A7A7A;
+            --bg-light: #F5F5F5;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,14 +23,13 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #C41E3A 0%, #8B1429 100%);
             min-height: 100vh;
-            overflow-x: hidden;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Arka plan animasyonu */
         body::before {
             content: '';
             position: absolute;
@@ -29,13 +37,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/><stop offset="100%" style="stop-color:rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(%23a)"><animate attributeName="cx" values="20;80;20" dur="15s" repeatCount="indefinite"/></circle><circle cx="80" cy="80" r="15" fill="url(%23a)"><animate attributeName="cy" values="80;20;80" dur="12s" repeatCount="indefinite"/></circle></svg>') repeat;
-            animation: float 25s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(180deg); }
+            background: url('data:image/svg+xml,%3Csvg width="60" height="60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 0l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z" fill="rgba(255,255,255,0.03)"/%3E%3C/svg%3E') repeat;
+            opacity: 0.3;
         }
 
         .container {
@@ -49,42 +52,21 @@
         .header {
             text-align: center;
             margin-bottom: 3rem;
-            animation: slideInDown 1s ease-out;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .header h1 {
-            font-size: 3rem;
-            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 800;
             color: white;
-            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             margin-bottom: 1rem;
-            animation: glow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.3);
-            }
-            to {
-                text-shadow: 0 4px 25px rgba(0, 0, 0, 0.5), 0 0 50px rgba(255, 255, 255, 0.6);
-            }
         }
 
         .header .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 300;
         }
 
         .stats-row {
@@ -95,222 +77,212 @@
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .stat-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
         }
 
-        .stat-card .icon {
-            font-size: 2.5rem;
+        .stat-icon {
+            font-size: 3rem;
             margin-bottom: 1rem;
-            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .stat-card .number {
-            font-size: 2rem;
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
             font-weight: 700;
-            color: #333;
+            color: var(--primary-red);
             margin-bottom: 0.5rem;
         }
 
-        .stat-card .label {
-            color: #666;
+        .stat-label {
+            color: var(--text-muted);
             font-weight: 500;
+            font-size: 1rem;
         }
 
         .kanun-list {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            animation: slideInUp 1s ease-out 0.5s both;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .kanun-list h2 {
-            font-size: 2rem;
-            color: #333;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--text-dark);
             margin-bottom: 2rem;
             text-align: center;
             position: relative;
+            padding-bottom: 1rem;
         }
 
         .kanun-list h2::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), var(--dark-red));
             border-radius: 2px;
         }
 
         .kanun-item {
-            background: white;
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: slideInLeft 0.6s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .kanun-item:nth-child(odd) { animation-delay: 0.1s; }
-        .kanun-item:nth-child(even) { animation-delay: 0.2s; }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .kanun-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .kanun-item:hover::before {
-            left: 100%;
+            background: var(--bg-light);
+            margin-bottom: 1.5rem;
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 5px solid var(--primary-red);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
         }
 
         .kanun-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
-        .kanun-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .kanun-meta {
+        .kanun-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
             margin-bottom: 1rem;
+        }
+
+        .kanun-id {
+            background: var(--primary-red);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 700;
             font-size: 0.9rem;
         }
 
-        .kanun-status {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .kanun-baslik {
+            font-size: 1.5rem;
             font-weight: 600;
-            text-transform: uppercase;
-            animation: breathing 3s ease-in-out infinite;
+            color: var(--text-dark);
+            margin: 1rem 0;
         }
 
-        @keyframes breathing {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
+        .kanun-aciklama {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 1rem 0;
         }
 
-        .status-taslak { background: #ffeaa7; color: #2d3436; }
-        .status-oylamada { background: #74b9ff; color: white; }
-        .status-yururlukte { background: #00b894; color: white; }
-        .status-reddedildi { background: #e17055; color: white; }
+        .kanun-aciklama p {
+            margin: 0.75rem 0;
+        }
 
-        .kanun-actions {
+        .kanun-aciklama p:first-child {
+            margin-top: 0;
+        }
+
+        .kanun-aciklama p:last-child {
+            margin-bottom: 0;
+        }
+
+        .kanun-footer {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
+        .kanun-status {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-yürürlükte {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-oylamada {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-taslak {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-reddedildi {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .kanun-date {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .detay-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            display: inline-block;
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .detay-btn:hover {
+            box-shadow: 0 6px 16px rgba(196, 30, 58, 0.3);
+        }
+
+        .admin-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
-            animation: shimmer 3s ease-in-out infinite;
+            padding: 16px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.4);
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        @keyframes shimmer {
-            0%, 100% {
-                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            }
-            50% {
-                box-shadow: 0 10px 25px rgba(118, 75, 162, 0.6);
-            }
+        .admin-btn:hover {
+            box-shadow: 0 12px 32px rgba(52, 152, 219, 0.6);
         }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 150px;
+            height: 150px;
+            fill: #ddd;
+            margin-bottom: 2rem;
         }
 
         .footer {
@@ -318,155 +290,131 @@
             margin-top: 3rem;
             padding: 2rem;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
             backdrop-filter: blur(10px);
-            animation: fadeIn 2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .footer img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .footer-text {
+            border-radius: 16px;
             color: white;
             font-size: 1rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        /* Mobil responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
+
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
-            
+
             .stats-row {
                 grid-template-columns: 1fr;
             }
-            
-            .kanun-meta {
+
+            .kanun-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .kanun-footer {
                 flex-direction: column;
                 align-items: flex-start;
             }
-        }
 
-        /* Loading animasyonu */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            .admin-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 14px 24px;
+            }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-gavel"></i> Cumhuriyet RP Bot</h1>
-            <p class="subtitle">📜 v1.1.0 Kanun Takip ve Yönetim Sistemi</p>
+            <h1>📜 Kanun Takip Sistemi</h1>
+            <p class="subtitle">Cumhuriyet RP Bot v1.1.1</p>
         </div>
 
         <div class="stats-row">
             <div class="stat-card">
-                <div class="icon" style="color: #00b894;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="number"><%= kanunlar.filter(k => k.durum === 'Yürürlükte').length %></div>
-                <div class="label">Yürürlükteki Kanunlar</div>
+                <div class="stat-icon">✅</div>
+                <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Yürürlükte').length %></div>
+                <div class="stat-label">Yürürlükte</div>
             </div>
-            
             <div class="stat-card">
-                <div class="icon" style="color: #74b9ff;">
-                    <i class="fas fa-vote-yea"></i>
-                </div>
-                <div class="number"><%= kanunlar.filter(k => k.durum === 'Oylamada').length %></div>
-                <div class="label">Oylamadaki Kanunlar</div>
+                <div class="stat-icon">🗳️</div>
+                <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Oylamada').length %></div>
+                <div class="stat-label">Oylamada</div>
             </div>
-            
             <div class="stat-card">
-                <div class="icon" style="color: #ffeaa7;">
-                    <i class="fas fa-edit"></i>
-                </div>
-                <div class="number"><%= kanunlar.filter(k => k.durum === 'Taslak').length %></div>
-                <div class="label">Taslak Kanunlar</div>
+                <div class="stat-icon">📝</div>
+                <div class="stat-number"><%= kanunlar.filter(k => k.durum === 'Taslak').length %></div>
+                <div class="stat-label">Taslak</div>
             </div>
-            
             <div class="stat-card">
-                <div class="icon" style="color: #e17055;">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-                <div class="number"><%= kanunlar.filter(k => k.durum === 'Reddedildi').length %></div>
-                <div class="label">Reddedilen Kanunlar</div>
+                <div class="stat-icon">📊</div>
+                <div class="stat-number"><%= kanunlar.length %></div>
+                <div class="stat-label">Toplam</div>
             </div>
         </div>
 
         <div class="kanun-list">
-            <h2><i class="fas fa-scroll"></i> Tüm Kanun Teklifleri</h2>
-            
+            <h2>⚖️ Kanunlar</h2>
+
             <% if (kanunlar.length === 0) { %>
-                <div style="text-align: center; padding: 3rem; color: #666;">
-                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <p>Henüz hiç kanun teklifi bulunmuyor.</p>
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem; color: var(--text-dark);">Henüz Kanun Yok</h3>
+                    <p style="font-size: 1.1rem;">Discord botunu kullanarak yeni kanun teklifleri oluşturabilirsiniz.</p>
                 </div>
             <% } else { %>
-                <% kanunlar.forEach((k, index) => { %>
-                    <div class="kanun-item" data-index="<%= index %>">
-                        <div class="kanun-title">
-                            <i class="fas fa-balance-scale"></i> <%= k.baslik %>
+                <% kanunlar.forEach(k => { %>
+                    <div class="kanun-item">
+                        <div class="kanun-header">
+                            <div class="kanun-id">
+                                #<%= k.id %>
+                            </div>
                         </div>
                         
-                        <div class="kanun-meta">
-                            <span class="kanun-status status-<%= k.durum.toLowerCase() %>">
-                                <% if (k.durum === 'Taslak') { %>
-                                    <i class="fas fa-edit"></i> Taslak
-                                <% } else if (k.durum === 'Oylamada') { %>
-                                    <i class="fas fa-vote-yea"></i> Oylamada
-                                <% } else if (k.durum === 'Yürürlükte') { %>
-                                    <i class="fas fa-check-circle"></i> Yürürlükte
-                                <% } else if (k.durum === 'Reddedildi') { %>
-                                    <i class="fas fa-times-circle"></i> Reddedildi
-                                <% } %>
-                            </span>
-                            
-                            <% if (k.yururluge_giris_sekli) { %>
-                                <span style="color: #666;">
-                                    <i class="fas fa-newspaper"></i> <%= k.yururluge_giris_sekli %>
+                        <div class="kanun-baslik">
+                            <%= k.baslik %>
+                        </div>
+                        
+                        <% if (k.icerik) { %>
+                            <div class="kanun-aciklama">
+                                <%= k.icerik.length > 200 ? k.icerik.substring(0, 200) + '...' : k.icerik %>
+                            </div>
+                        <% } %>
+                        
+                        <div class="kanun-footer">
+                            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                <span class="kanun-status status-<%= k.durum.toLowerCase() %>">
+                                    <% if (k.durum === 'Taslak') { %>
+                                        📝 Taslak
+                                    <% } else if (k.durum === 'Oylamada') { %>
+                                        🗳️ Oylamada
+                                    <% } else if (k.durum === 'Yürürlükte') { %>
+                                        ✅ Yürürlükte
+                                    <% } else if (k.durum === 'Reddedildi') { %>
+                                        ❌ Reddedildi
+                                    <% } %>
                                 </span>
-                            <% } %>
+                                
+                                <% if (k.zaman) { %>
+                                    <span class="kanun-date">
+                                        📅 <%= new Date(k.zaman).toLocaleDateString('tr-TR', { 
+                                            day: 'numeric', 
+                                            month: 'long', 
+                                            year: 'numeric' 
+                                        }) %>
+                                    </span>
+                                <% } %>
+                            </div>
                             
-                            <span style="color: #999;">
-                                <i class="fas fa-calendar"></i> <%= new Date(k.zaman).toLocaleDateString('tr-TR') %>
-                            </span>
-                        </div>
-                        
-                        <div class="kanun-actions">
-                            <a href="/kanun/<%= k.id %>" class="btn btn-primary">
-                                <i class="fas fa-eye"></i> Detay Görüntüle
+                            <a href="/kanun/<%= k.id %>" class="detay-btn">
+                                Detayları Gör →
                             </a>
                         </div>
                     </div>
@@ -475,86 +423,74 @@
         </div>
 
         <div class="footer">
-            <% if (thumbnail) { %>
-                <img src="<%= thumbnail %>" alt="Bot Logo">
-            <% } %>
-            <div class="footer-text">
-                <i class="fas fa-shield-alt"></i> <%= footer %>
-            </div>
+            🛡️ Cumhuriyet RP Bot v1.1.1 - Kanun Takip ve Yönetim Sistemi
         </div>
     </div>
 
+    <a href="/admin" class="admin-btn">
+        🔐 Admin Paneli
+    </a>
+
     <script>
-        // Animation delay'leri ayarla
-        document.querySelectorAll('.kanun-item[data-index]').forEach(item => {
-            const index = parseInt(item.getAttribute('data-index'));
-            item.style.animationDelay = (index * 0.1) + 's';
-        });
-
-        // Sayfa yüklenme animasyonu
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '1';
-        });
-
-        // Smooth scroll için
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Kanun kartlarına tıklama efekti
-        document.querySelectorAll('.kanun-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                if (!e.target.closest('.btn')) {
-                    const link = this.querySelector('.btn');
-                    if (link) {
-                        window.location.href = link.href;
-                    }
-                }
-            });
-        });
-
-        // Rastgele parçacık efekti
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: fixed;
-                width: 4px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.7);
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 0;
-                animation: float-particle 6s linear infinite;
-                left: ${Math.random() * 100}vw;
-                top: 100vh;
-            `;
+        // Discord markdown'ını HTML'e dönüştürme fonksiyonu
+        function parseDiscordMarkdown(text) {
+            if (!text) return '';
             
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes float-particle {
-                    to {
-                        transform: translateY(-110vh) rotate(360deg);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            document.body.appendChild(particle);
+            // String literal \n'leri gerçek satır sonlarına çevir
+            text = text.replace(/\\n/g, '\n');
             
-            setTimeout(() => {
-                particle.remove();
-                style.remove();
-            }, 6000);
+            // HTML karakterlerini escape et
+            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Code blocks (```kod```)
+            text = text.replace(/```([\s\S]*?)```/g, '<pre style="background: #2f3136; color: #dcddde; padding: 8px; border-radius: 4px; overflow-x: auto; margin: 8px 0;"><code>$1</code></pre>');
+            
+            // Inline code (`kod`)
+            text = text.replace(/`([^`]+)`/g, '<code style="background: #2f3136; color: #dcddde; padding: 2px 6px; border-radius: 3px; font-family: monospace;">$1</code>');
+            
+            // Strikethrough (~~strikethrough~~)
+            text = text.replace(/~~([^~]+)~~/g, '<s style="text-decoration: line-through;">$1</s>');
+            
+            // Bold with ** (**bold**)
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // Underline with __ (__underline__)
+            text = text.replace(/__([^_]+)__/g, '<u style="text-decoration: underline;">$1</u>');
+            
+            // Italic with single * (*italic*)
+            text = text.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+            
+            // Italic with single _ (_italic_)
+            text = text.replace(/(^|\s)_([^_]+?)_($|\s)/g, '$1<em>$2</em>$3');
+            
+            // Blockquote (> quote)
+            text = text.replace(/^&gt;\s*(.+)$/gm, '<blockquote style="border-left: 4px solid #4e5058; padding-left: 12px; color: #b9bbbe; margin: 4px 0;">$1</blockquote>');
+            
+            // Links ([text](url))
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #00b0f4; text-decoration: none;">$1</a>');
+            
+            // Çift satır sonlarını paragraf ayırıcı olarak kullan
+            text = text.replace(/\n\n+/g, '</p><p>');
+            
+            // Tek satır sonlarını br'ye çevir
+            text = text.replace(/\n/g, '<br>');
+            
+            // Paragraf etiketleriyle sarmala
+            text = '<p>' + text + '</p>';
+            
+            // Boş paragrafları temizle
+            text = text.replace(/<p>\s*<\/p>/g, '');
+            
+            return text;
         }
 
-        // Her 3 saniyede bir parçacık oluştur
-        setInterval(createParticle, 3000);
+        // Sayfa yüklendiğinde tüm kanun açıklamalarını formatla
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.kanun-aciklama').forEach(function(element) {
+                const rawText = element.textContent;
+                element.innerHTML = parseDiscordMarkdown(rawText);
+            });
+        });
     </script>
 </body>
-
 </html>

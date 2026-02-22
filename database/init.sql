@@ -36,3 +36,17 @@ CREATE TABLE IF NOT EXISTS oyun_durumu (
 
 -- İlk çalıştırmada bir başlangıç kaydı ekleyin (eğer yoksa)
 INSERT OR IGNORE INTO oyun_durumu (id, memnuniyet_seviyesi, isyan_aktif) VALUES (1, 75, 0);
+
+-- vatandaslik_basvurulari tablosu oluştur
+CREATE TABLE IF NOT EXISTS vatandaslik_basvurulari (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    kullanici_id TEXT NOT NULL,
+    kullanici_tag TEXT NOT NULL,
+    isim TEXT NOT NULL,
+    yas TEXT NOT NULL,
+    sebep TEXT NOT NULL,
+    durum TEXT DEFAULT 'Beklemede', -- Beklemede, Onaylandı, Reddedildi
+    basvuru_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
+    islem_tarihi DATETIME,
+    islem_yapan TEXT
+);

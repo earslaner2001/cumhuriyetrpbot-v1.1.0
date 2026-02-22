@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📋 <%= kanun.baslik %> - Cumhuriyet RP Bot v1.1.0</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title><%= kanun.baslik %> - Cumhuriyet RP Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-red: #C41E3A;
+            --dark-red: #8B1429;
+            --text-dark: #2C2C2C;
+            --text-muted: #7A7A7A;
+            --bg-light: #F5F5F5;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,14 +23,13 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #C41E3A 0%, #8B1429 100%);
             min-height: 100vh;
-            overflow-x: hidden;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Arka plan animasyonu */
         body::before {
             content: '';
             position: absolute;
@@ -30,784 +37,600 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 25% 25%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 75% 75%, rgba(56, 102, 177, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 50% 10%, rgba(30, 60, 114, 0.1) 0%, transparent 50%);
-            animation: wave-bg 15s ease-in-out infinite;
-        }
-
-        @keyframes wave-bg {
-            0%, 100% { 
-                opacity: 0.3;
-                transform: scale(1) rotate(0deg);
-            }
-            50% { 
-                opacity: 0.8;
-                transform: scale(1.1) rotate(5deg);
-            }
+            background: url('data:image/svg+xml,%3Csvg width="60" height="60" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M30 0l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10z" fill="rgba(255,255,255,0.03)"/%3E%3C/svg%3E') repeat;
+            opacity: 0.3;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 2rem;
             position: relative;
             z-index: 1;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: slideInDown 1s ease-out;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 1rem;
-            animation: glow-detail 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow-detail {
-            from {
-                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(74, 144, 226, 0.3);
-            }
-            to {
-                text-shadow: 0 4px 30px rgba(0, 0, 0, 0.7), 0 0 60px rgba(74, 144, 226, 0.7);
-            }
-        }
-
-        .breadcrumb {
-            display: flex;
+        .back-btn {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 2rem;
-            animation: fadeIn 1.5s ease-out;
-        }
-
-        .breadcrumb a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .breadcrumb a:hover {
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
         }
 
-        .breadcrumb span {
-            margin: 0 1rem;
-            color: rgba(255, 255, 255, 0.6);
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
+        .kanun-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        .kanun-detay {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            animation: slideInLeft 1s ease-out;
-            position: relative;
-            overflow: hidden;
+        .kanun-header {
+            border-bottom: 3px solid var(--bg-light);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
         }
 
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .kanun-detay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.8s ease;
-        }
-
-        .kanun-detay:hover::before {
-            left: 100%;
+        .kanun-id-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
         }
 
         .kanun-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #1e3c72;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #74b9ff;
-            position: relative;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
         }
 
-        .kanun-title::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
-            animation: expand 3s ease-in-out infinite;
-        }
-
-        @keyframes expand {
-            0%, 100% { width: 100px; }
-            50% { width: 200px; }
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-item {
-            background: rgba(116, 185, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border-left: 4px solid #74b9ff;
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .detail-item:nth-child(1) { animation-delay: 0.1s; }
-        .detail-item:nth-child(2) { animation-delay: 0.2s; }
-        .detail-item:nth-child(3) { animation-delay: 0.3s; }
-        .detail-item:nth-child(4) { animation-delay: 0.4s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .detail-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            background: rgba(116, 185, 255, 0.2);
-        }
-
-        .detail-label {
-            font-weight: 700;
-            color: #1e3c72;
-            margin-bottom: 0.5rem;
+        .kanun-meta {
             display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .detail-value {
-            color: #2d3436;
-            font-size: 1.1rem;
         }
 
         .status-badge {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 700;
-            text-transform: uppercase;
-            animation: status-breathing 3s ease-in-out infinite;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        @keyframes status-breathing {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.9;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
+        .status-yürürlükte {
+            background: #d4edda;
+            color: #155724;
         }
 
-        .status-taslak { background: linear-gradient(45deg, #f39c12, #e67e22); color: white; }
-        .status-oylamada { background: linear-gradient(45deg, #3498db, #2980b9); color: white; }
-        .status-yururlukte { background: linear-gradient(45deg, #27ae60, #219a52); color: white; }
-        .status-reddedildi { background: linear-gradient(45deg, #e74c3c, #c0392b); color: white; }
-
-        .icerik-section {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-top: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            animation: slideInUp 1s ease-out 0.5s both;
+        .status-oylamada {
+            background: #d1ecf1;
+            color: #0c5460;
         }
 
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .status-taslak {
+            background: #fff3cd;
+            color: #856404;
         }
 
-        .icerik-section h3 {
-            font-size: 1.5rem;
-            color: #1e3c72;
+        .status-reddedildi {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .meta-item {
+            color: var(--text-muted);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kanun-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-dark);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 12px;
         }
 
-        .icerik-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #2d3436;
-            background: rgba(116, 185, 255, 0.05);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border-left: 4px solid #74b9ff;
-        }
-
-        .chart-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
+        .section-content {
+            background: var(--bg-light);
             padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            animation: slideInRight 1s ease-out;
-            position: sticky;
-            top: 2rem;
+            border-radius: 12px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            font-size: 1.05rem;
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .section-content p {
+            margin: 0.75rem 0;
         }
 
-        .chart-title {
-            font-size: 1.8rem;
-            color: #1e3c72;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+        .section-content p:first-child {
+            margin-top: 0;
         }
 
-        .chart-wrapper {
-            position: relative;
-            animation: pulse-chart 4s ease-in-out infinite;
+        .section-content p:last-child {
+            margin-bottom: 0;
         }
 
-        @keyframes pulse-chart {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(116, 185, 255, 0.4);
-            }
-            50% {
-                transform: scale(1.02);
-                box-shadow: 0 0 0 20px rgba(116, 185, 255, 0);
-            }
-        }
-
-        #oyGrafiği {
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .vote-summary {
-            margin-top: 1.5rem;
+        .info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
-        .vote-item {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 15px;
-            transition: all 0.3s ease;
+        .info-item {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-red);
         }
 
-        .vote-evet {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            color: white;
-            animation: vote-glow-evet 3s ease-in-out infinite;
-        }
-
-        .vote-hayir {
-            background: linear-gradient(45deg, #e74c3c, #f39c12);
-            color: white;
-            animation: vote-glow-hayir 3s ease-in-out infinite 1.5s;
-        }
-
-        @keyframes vote-glow-evet {
-            0%, 100% {
-                box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-            }
-            50% {
-                box-shadow: 0 10px 25px rgba(39, 174, 96, 0.7);
-            }
-        }
-
-        @keyframes vote-glow-hayir {
-            0%, 100% {
-                box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-            }
-            50% {
-                box-shadow: 0 10px 25px rgba(231, 76, 60, 0.7);
-            }
-        }
-
-        .vote-number {
-            font-size: 2rem;
-            font-weight: 700;
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .vote-label {
-            font-size: 1rem;
-            text-transform: uppercase;
+        .info-value {
+            color: var(--text-dark);
+            font-size: 1.2rem;
             font-weight: 600;
         }
 
-        .action-buttons {
+        .oylar-section {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .oylar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .oy-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .oy-stat {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .oy-stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .oy-stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .oy-evet .oy-stat-number {
+            color: #27ae60;
+        }
+
+        .oy-hayir .oy-stat-number {
+            color: #e74c3c;
+        }
+
+        .oy-cekinser .oy-stat-number {
+            color: #95a5a6;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 30px;
+            display: flex;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .progress-evet {
+            background: #27ae60;
+        }
+
+        .progress-hayir {
+            background: #e74c3c;
+        }
+
+        .progress-cekinser {
+            background: #95a5a6;
+        }
+
+        .oy-listesi {
+            margin-top: 1.5rem;
+        }
+
+        .oy-item {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .oy-icon {
+            font-size: 1.5rem;
+        }
+
+        .oy-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .actions {
             display: flex;
             gap: 1rem;
-            justify-content: center;
-            margin: 3rem 0;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 3px solid var(--bg-light);
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 1rem 2rem;
-            border-radius: 25px;
+            padding: 14px 28px;
+            border-radius: 10px;
             text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
             color: white;
-            animation: btn-shimmer 4s ease-in-out infinite;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(196, 30, 58, 0.3);
         }
 
         .btn-secondary {
-            background: linear-gradient(45deg, #636e72, #2d3436);
-            color: white;
-            animation: btn-shimmer 4s ease-in-out infinite 2s;
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
 
-        @keyframes btn-shimmer {
-            0%, 100% {
-                box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
-            }
-            50% {
-                box-shadow: 0 10px 25px rgba(116, 185, 255, 0.6);
-            }
-        }
-
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .footer img {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            animation: rotate-logo 10s linear infinite;
-        }
-
-        @keyframes rotate-logo {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .footer-text {
-            color: white;
-            font-size: 1rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Mobil responsive */
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                position: static;
-            }
+        .btn-secondary:hover {
+            background: #e0e0e0;
         }
 
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
-            .header h1 {
+
+            .kanun-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .kanun-title {
                 font-size: 2rem;
             }
-            
-            .detail-grid {
+
+            .info-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .vote-summary {
-                grid-template-columns: 1fr;
+
+            .kanun-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
             }
-            
-            .action-buttons {
+
+            .actions {
                 flex-direction: column;
             }
-        }
 
-        /* Özel scroll bar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(45deg, #0984e3, #74b9ff);
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-balance-scale"></i> Kanun Detayları</h1>
-            
-            <div class="breadcrumb">
-                <a href="/"><i class="fas fa-home"></i> Ana Sayfa</a>
-                <span><i class="fas fa-chevron-right"></i></span>
-                <span>Kanun Detayı</span>
-            </div>
-        </div>
+        <a href="/" class="back-btn">
+            ← Ana Sayfaya Dön
+        </a>
 
-        <div class="main-content">
-            <div class="kanun-detay">
-                <div class="kanun-title">
-                    <i class="fas fa-gavel"></i> <%= kanun.baslik %>
+        <div class="kanun-card">
+            <div class="kanun-header">
+                <div class="kanun-id-badge">
+                    📜 Kanun #<%= kanun.id %>
                 </div>
+                
+                <h1 class="kanun-title">
+                    <%= kanun.baslik %>
+                </h1>
 
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="fas fa-user"></i> Teklif Sahibi
-                        </div>
-                        <div class="detail-value"><%= kanun.teklif_sahibi %></div>
-                    </div>
+                <div class="kanun-meta">
+                    <span class="status-badge status-<%= kanun.durum.toLowerCase() %>">
+                        <% if (kanun.durum === 'Taslak') { %>
+                            📝 Taslak
+                        <% } else if (kanun.durum === 'Oylamada') { %>
+                            🗳️ Oylamada
+                        <% } else if (kanun.durum === 'Yürürlükte') { %>
+                            ✅ Yürürlükte
+                        <% } else if (kanun.durum === 'Reddedildi') { %>
+                            ❌ Reddedildi
+                        <% } %>
+                    </span>
 
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="fas fa-flag"></i> Durum
-                        </div>
-                        <div class="detail-value">
-                            <span class="status-badge status-<%= kanun.durum.toLowerCase() %>">
-                                <% if (kanun.durum === 'Taslak') { %>
-                                    <i class="fas fa-edit"></i> Taslak
-                                <% } else if (kanun.durum === 'Oylamada') { %>
-                                    <i class="fas fa-vote-yea"></i> Oylamada
-                                <% } else if (kanun.durum === 'Yürürlükte') { %>
-                                    <i class="fas fa-check-circle"></i> Yürürlükte
-                                <% } else if (kanun.durum === 'Reddedildi') { %>
-                                    <i class="fas fa-times-circle"></i> Reddedildi
-                                <% } %>
-                            </span>
-                        </div>
-                    </div>
-
-                    <% if (kanun.yururluge_giris_sekli) { %>
-                        <div class="detail-item">
-                            <div class="detail-label">
-                                <i class="fas fa-newspaper"></i> Yürürlüğe Giriş Şekli
-                            </div>
-                            <div class="detail-value"><%= kanun.yururluge_giris_sekli %></div>
-                        </div>
+                    <% if (kanun.zaman) { %>
+                        <span class="meta-item">
+                            📅 <%= new Date(kanun.zaman).toLocaleDateString('tr-TR', { 
+                                day: 'numeric', 
+                                month: 'long', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) %>
+                        </span>
                     <% } %>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="fas fa-calendar"></i> Oluşturulma Tarihi
-                        </div>
-                        <div class="detail-value"><%= new Date(kanun.zaman).toLocaleString('tr-TR') %></div>
-                    </div>
-                </div>
-
-                <div class="icerik-section">
-                    <h3><i class="fas fa-file-text"></i> Kanun İçeriği</h3>
-                    <div class="icerik-text">
-                        <%= kanun.icerik %>
-                    </div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-pie"></i> Oy Dağılımı
-                </div>
-                
-                <div class="chart-wrapper">
-                    <canvas id="oyGrafiği" width="300" height="300"></canvas>
-                </div>
-                
-                <div class="vote-summary">
-                    <div class="vote-item vote-evet">
-                        <div class="vote-number" id="evetSayisi">0</div>
-                        <div class="vote-label">
-                            <i class="fas fa-thumbs-up"></i> Evet
-                        </div>
-                    </div>
-                    <div class="vote-item vote-hayir">
-                        <div class="vote-number" id="hayirSayisi">0</div>
-                        <div class="vote-label">
-                            <i class="fas fa-thumbs-down"></i> Hayır
-                        </div>
-                    </div>
+            <div class="kanun-section">
+                <h2 class="section-title">
+                    📋 Açıklama
+                </h2>
+                <div class="section-content">
+                    <%= kanun.icerik || 'Açıklama bulunmamaktadır.' %>
                 </div>
             </div>
-        </div>
 
-        <div class="action-buttons">
-            <a href="/" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Ana Sayfaya Dön
-            </a>
-            <a href="/admin" class="btn btn-secondary">
-                <i class="fas fa-cog"></i> Admin Panel
-            </a>
-        </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Durum</div>
+                    <div class="info-value"><%= kanun.durum %></div>
+                </div>
 
-        <div class="footer">
-            <% if (thumbnail) { %>
-                <img src="<%= thumbnail %>" alt="Bot Logo">
+                <% if (kanun.oylar_evet !== null && kanun.oylar_evet !== undefined) { %>
+                    <div class="info-item">
+                        <div class="info-label">Toplam Oy</div>
+                        <div class="info-value">
+                            <%= (kanun.oylar_evet || 0) + (kanun.oylar_hayir || 0) + (kanun.oylar_cekinser || 0) %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <% if (kanun.teklif_eden_id) { %>
+                    <div class="info-item">
+                        <div class="info-label">Teklif Eden</div>
+                        <div class="info-value">👤 User ID: <%= kanun.teklif_eden_id %></div>
+                    </div>
+                <% } %>
+
+                <% if (kanun.yururluge_giris_sekli) { %>
+                    <div class="info-item">
+                        <div class="info-label">Yürürlüğe Giriş</div>
+                        <div class="info-value"><%= kanun.yururluge_giris_sekli %></div>
+                    </div>
+                <% } %>
+            </div>
+
+            <% if (oylar && oylar.length > 0) { %>
+                <div class="oylar-section">
+                    <h3 class="oylar-title">
+                        🗳️ Oylama Sonuçları
+                    </h3>
+
+                    <div class="oy-stats">
+                        <div class="oy-stat oy-evet">
+                            <div class="oy-stat-number"><%= kanun.oylar_evet || 0 %></div>
+                            <div class="oy-stat-label">Evet</div>
+                        </div>
+                        <div class="oy-stat oy-hayir">
+                            <div class="oy-stat-number"><%= kanun.oylar_hayir || 0 %></div>
+                            <div class="oy-stat-label">Hayır</div>
+                        </div>
+                        <div class="oy-stat oy-cekinser">
+                            <div class="oy-stat-number"><%= kanun.oylar_cekinser || 0 %></div>
+                            <div class="oy-stat-label">Çekimser</div>
+                        </div>
+                    </div>
+
+                    <% 
+                    const toplamOy = (kanun.oylar_evet || 0) + (kanun.oylar_hayir || 0) + (kanun.oylar_cekinser || 0);
+                    const evetYuzde = toplamOy > 0 ? ((kanun.oylar_evet || 0) / toplamOy * 100).toFixed(1) : 0;
+                    const hayirYuzde = toplamOy > 0 ? ((kanun.oylar_hayir || 0) / toplamOy * 100).toFixed(1) : 0;
+                    const cekinserYuzde = toplamOy > 0 ? ((kanun.oylar_cekinser || 0) / toplamOy * 100).toFixed(1) : 0;
+                    %>
+
+                    <div class="progress-bar">
+                        <% if (evetYuzde > 0) { 
+                            const evetWidth = evetYuzde + '%';
+                        %>
+                            <div class="progress-segment progress-evet" style="width: <%= evetWidth %>;">
+                                <%= evetYuzde %>%
+                            </div>
+                        <% } %>
+                        <% if (hayirYuzde > 0) { 
+                            const hayirWidth = hayirYuzde + '%';
+                        %>
+                            <div class="progress-segment progress-hayir" style="width: <%= hayirWidth %>;">
+                                <%= hayirYuzde %>%
+                            </div>
+                        <% } %>
+                        <% if (cekinserYuzde > 0) { 
+                            const cekinserWidth = cekinserYuzde + '%';
+                        %>
+                            <div class="progress-segment progress-cekinser" style="width: <%= cekinserWidth %>;">
+                                <%= cekinserYuzde %>%
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div class="oy-listesi">
+                        <% oylar.slice(0, 10).forEach(oy => { %>
+                            <div class="oy-item">
+                                <span class="oy-icon">
+                                    <% const oyLower = (oy.oy || '').toLowerCase(); %>
+                                    <% if (oyLower === 'evet') { %>
+                                        ✅
+                                    <% } else if (oyLower === 'hayır' || oyLower === 'hayir') { %>
+                                        ❌
+                                    <% } else { %>
+                                        ⚪
+                                    <% } %>
+                                </span>
+                                <span class="oy-text">
+                                    <strong><%= oy.oy %></strong>
+                                </span>
+                            </div>
+                        <% }); %>
+                        <% if (oylar.length > 10) { %>
+                            <div style="text-align: center; margin-top: 1rem; color: var(--text-muted);">
+                                ve <%= oylar.length - 10 %> oy daha...
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="oylar-section" style="text-align: center; padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                    <h3 style="color: var(--text-muted); font-size: 1.2rem;">Henüz oy kullanılmamış</h3>
+                </div>
             <% } %>
-            <div class="footer-text">
-                <i class="fas fa-shield-alt"></i> <%= footer %>
+
+            <div class="actions">
+                <a href="/" class="btn btn-primary">
+                    🏠 Ana Sayfa
+                </a>
+                <a href="/admin" class="btn btn-secondary">
+                    🔐 Admin Paneli
+                </a>
             </div>
         </div>
     </div>
 
     <script>
-        // Sayfa yüklenme animasyonu
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '1';
-        });
-
-        // Oy verilerini al (EJS template syntax)
-        const evetCount = <%= oylar.filter(o => o.oy === 'evet').length %>;
-        const hayirCount = <%= oylar.filter(o => o.oy === 'hayır').length %>;
-
-        // Sayıları animasyonlu göster
-        function animateNumber(elementId, targetNumber, duration = 1000) {
-            const element = document.getElementById(elementId);
-            let startNumber = 0;
-            const increment = targetNumber / (duration / 16);
+        // Discord markdown'ını HTML'e dönüştürme fonksiyonu
+        function parseDiscordMarkdown(text) {
+            if (!text) return '';
             
-            function updateNumber() {
-                startNumber += increment;
-                if (startNumber >= targetNumber) {
-                    element.textContent = targetNumber;
-                } else {
-                    element.textContent = Math.floor(startNumber);
-                    requestAnimationFrame(updateNumber);
-                }
-            }
-            updateNumber();
+            // String literal \n'leri gerçek satır sonlarına çevir
+            text = text.replace(/\\n/g, '\n');
+            
+            // HTML karakterlerini escape et
+            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Code blocks (```kod```)
+            text = text.replace(/```([\s\S]*?)```/g, '<pre style="background: #2f3136; color: #dcddde; padding: 8px; border-radius: 4px; overflow-x: auto; margin: 8px 0;"><code>$1</code></pre>');
+            
+            // Inline code (`kod`)
+            text = text.replace(/`([^`]+)`/g, '<code style="background: #2f3136; color: #dcddde; padding: 2px 6px; border-radius: 3px; font-family: monospace;">$1</code>');
+            
+            // Strikethrough (~~strikethrough~~)
+            text = text.replace(/~~([^~]+)~~/g, '<s style="text-decoration: line-through;">$1</s>');
+            
+            // Bold with ** (**bold**)
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // Underline with __ (__underline__)
+            text = text.replace(/__([^_]+)__/g, '<u style="text-decoration: underline;">$1</u>');
+            
+            // Italic with single * (*italic*)
+            text = text.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+            
+            // Italic with single _ (_italic_)
+            text = text.replace(/(^|\s)_([^_]+?)_($|\s)/g, '$1<em>$2</em>$3');
+            
+            // Blockquote (> quote)
+            text = text.replace(/^&gt;\s*(.+)$/gm, '<blockquote style="border-left: 4px solid #4e5058; padding-left: 12px; color: #b9bbbe; margin: 4px 0;">$1</blockquote>');
+            
+            // Links ([text](url))
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #00b0f4; text-decoration: none;">$1</a>');
+            
+            // Çift satır sonlarını paragraf ayırıcı olarak kullan
+            text = text.replace(/\n\n+/g, '</p><p>');
+            
+            // Tek satır sonlarını br'ye çevir
+            text = text.replace(/\n/g, '<br>');
+            
+            // Paragraf etiketleriyle sarmala
+            text = '<p>' + text + '</p>';
+            
+            // Boş paragrafları temizle
+            text = text.replace(/<p>\s*<\/p>/g, '');
+            
+            return text;
         }
 
-        // Sayıları animasyonlu göster
-        setTimeout(() => {
-            animateNumber('evetSayisi', evetCount, 1500);
-            animateNumber('hayirSayisi', hayirCount, 1500);
-        }, 1000);
-
-        // Chart.js ile pasta grafiği oluştur
-        const ctx = document.getElementById('oyGrafiği').getContext('2d');
-        
-        // Gradient oluştur
-        const evetGradient = ctx.createLinearGradient(0, 0, 0, 300);
-        evetGradient.addColorStop(0, '#27ae60');
-        evetGradient.addColorStop(1, '#2ecc71');
-        
-        const hayirGradient = ctx.createLinearGradient(0, 0, 0, 300);
-        hayirGradient.addColorStop(0, '#e74c3c');
-        hayirGradient.addColorStop(1, '#f39c12');
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Evet', 'Hayır'],
-                datasets: [{
-                    data: [evetCount, hayirCount],
-                    backgroundColor: [evetGradient, hayirGradient],
-                    borderWidth: 3,
-                    borderColor: '#ffffff',
-                    hoverBorderWidth: 5,
-                    hoverBorderColor: '#74b9ff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            color: '#2d3436'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff',
-                        borderColor: '#74b9ff',
-                        borderWidth: 2,
-                        cornerRadius: 10,
-                        displayColors: true
-                    }
-                },
-                animation: {
-                    animateRotate: true,
-                    animateScale: true,
-                    duration: 2000,
-                    easing: 'easeOutQuart'
-                },
-                cutout: '50%'
+        // Sayfa yüklendiğinde kanun içeriğini formatla
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentElement = document.querySelector('.section-content');
+            if (contentElement) {
+                const rawText = contentElement.textContent;
+                contentElement.innerHTML = parseDiscordMarkdown(rawText);
             }
-        });
-
-        // Hover efektleri
-        document.querySelectorAll('.detail-item, .vote-item').forEach(item => {
-            item.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px) scale(1.02)';
-            });
-            
-            item.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Sayfa tıklama efekti
-        document.addEventListener('click', function(e) {
-            const ripple = document.createElement('div');
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(116, 185, 255, 0.3);
-                transform: scale(0);
-                animation: ripple-effect 0.6s linear;
-                pointer-events: none;
-                left: ${e.clientX - 25}px;
-                top: ${e.clientY - 25}px;
-                width: 50px;
-                height: 50px;
-                z-index: 9999;
-            `;
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes ripple-effect {
-                    to {
-                        transform: scale(4);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            document.body.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-                style.remove();
-            }, 600);
-        });
-
-        // Smooth scroll için
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
         });
     </script>
 </body>
-
 </html>
