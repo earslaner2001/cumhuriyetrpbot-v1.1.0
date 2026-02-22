@@ -1,7 +1,6 @@
 # 🏛️ CumhuriyetRPBot v1.1.1
 
-Modern Discord bot'u ile **devlet simülasyonu** deneyimi yaşayın!  
-CumhuriyetRPBot, Discord sunucunuzda gerçekçi bir **demokratik sistem** kurmanızı sağlar.  
+CumhuriyetRPBot, Discord sunucunuzda bir **demokratik sistem** kurmanızı sağlar.  
 
 Oyunculara **başkan, bakan, asker, milletvekili ve halk** rolleri verilir;  
 **yasama, yürütme ve askeri sistem** tam etkileşimli şekilde simüle edilir.
